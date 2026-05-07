@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Direction: cinematic dark editorial — long-form scroll narrative, museum-quality typography, biological amber accent, GSAP scroll reveals -->
+<!-- Direction: cinematic light editorial — warm cream paper, deep ink typography, rich ochre accent, GSAP scroll reveals -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -15,15 +15,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --black:   #060608;
-  --paper:   #0d0d10;
-  --surface: #13131a;
-  --border:  rgba(255,255,255,0.07);
-  --amber:   oklch(72% 0.16 75);
-  --amber-dim: oklch(55% 0.12 75);
-  --white:   oklch(97% 0.005 90);
-  --mid:     oklch(55% 0.005 250);
-  --dim:     oklch(38% 0.005 250);
+  --black:   oklch(98% 0.008 85);
+  --paper:   oklch(96% 0.007 80);
+  --surface: oklch(93% 0.009 78);
+  --border:  rgba(30,20,10,0.1);
+  --amber:   oklch(50% 0.17 58);
+  --amber-dim: oklch(60% 0.12 60);
+  --white:   oklch(14% 0.01 50);
+  --mid:     oklch(40% 0.008 50);
+  --dim:     oklch(58% 0.006 50);
 }
 
 html { scroll-behavior: smooth; }
@@ -41,7 +41,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 0;
-  opacity: 0.35;
+  opacity: 0.18;
   pointer-events: none;
 }
 
@@ -54,7 +54,10 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  mix-blend-mode: normal;
+  background: color-mix(in oklch, var(--black) 85%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
 }
 
 .nav-logo {
@@ -80,7 +83,7 @@ nav {
   text-decoration: none;
   transition: color 0.2s;
 }
-.nav-links a:hover { color: var(--white); }
+.nav-links a:hover { color: var(--white); }  /* --white is now ink */
 
 /* ── SECTIONS ── */
 section { position: relative; z-index: 1; }
@@ -381,7 +384,7 @@ section { position: relative; z-index: 1; }
   font-size: 3rem;
   font-family: 'Source Serif 4', serif;
   font-weight: 300;
-  color: var(--border);
+  color: oklch(80% 0.04 78);
   line-height: 1;
   margin-bottom: 1.5rem;
 }
@@ -415,7 +418,7 @@ section { position: relative; z-index: 1; }
 .discovery-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 80% 60% at 60% 50%, color-mix(in oklch, var(--amber) 8%, transparent) 0%, transparent 70%);
+  background: radial-gradient(ellipse 80% 60% at 60% 50%, color-mix(in oklch, var(--amber) 6%, var(--paper)) 0%, var(--paper) 70%);
   pointer-events: none;
 }
 
@@ -788,7 +791,7 @@ gsap.registerPlugin(ScrollTrigger);
 const canvas = document.getElementById('cell-canvas');
 const ctx = canvas.getContext('2d');
 let cells = [];
-const AMBER = { r: 212, g: 152, b: 58 };
+const AMBER = { r: 160, g: 100, b: 30 };
 
 function resize() {
   canvas.width = window.innerWidth;
