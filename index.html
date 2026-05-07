@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<!-- Direction: cinematic dark editorial — long-form scroll narrative, museum-quality typography, biological amber accent, GSAP scroll reveals -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trained Immunity — The Memory Your Body Forgot It Had</title>
+<meta name="description" content="In 2011, immunologist Mihai Netea overturned 100 years of biology. Your innate immune system remembers. This is trained immunity.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,300;1,8..60,400;1,8..60,700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:   #060608;
+  --paper:   #0d0d10;
+  --surface: #13131a;
+  --border:  rgba(255,255,255,0.07);
+  --amber:   oklch(72% 0.16 75);
+  --amber-dim: oklch(55% 0.12 75);
+  --white:   oklch(97% 0.005 90);
+  --mid:     oklch(55% 0.005 250);
+  --dim:     oklch(38% 0.005 250);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+/* ── CANVAS BACKGROUND ── */
+#cell-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.5rem 4vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  mix-blend-mode: normal;
+}
+
+.nav-logo {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mid);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+
+/* ── SECTIONS ── */
+section { position: relative; z-index: 1; }
+
+/* ── HERO ── */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 4vw 8vh;
+}
+
+.hero-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+
+.hero h1 {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-size: clamp(3.5rem, 9vw, 10rem);
+  font-weight: 300;
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  max-width: 14ch;
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+.hero h1 em {
+  font-style: italic;
+  color: var(--amber);
+}
+
+.hero-sub {
+  margin-top: 3rem;
+  max-width: 52ch;
+  font-size: clamp(1rem, 1.4vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--mid);
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.hero-scroll-hint {
+  position: absolute;
+  bottom: 3rem;
+  right: 4vw;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  writing-mode: vertical-rl;
+  opacity: 0;
+}
+
+/* ── DIVIDER ── */
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0 4vw;
+}
+
+/* ── PULL QUOTE ── */
+.pull-quote {
+  padding: 14vh 4vw;
+  display: flex;
+  align-items: center;
+  gap: 4vw;
+}
+
+.pq-line {
+  width: 3px;
+  height: 8rem;
+  background: var(--amber);
+  flex-shrink: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+}
+
+.pq-text {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(1.6rem, 3.5vw, 3rem);
+  font-weight: 300;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  max-width: 28ch;
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.pq-text em { font-style: italic; color: var(--amber); }
+
+/* ── TWO-COLUMN SECTION ── */
+.two-col {
+  padding: 12vh 4vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8vw;
+  align-items: start;
+}
+
+.col-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber-dim);
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+
+.col-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(40px);
+}
+.col-title em { font-style: italic; color: var(--amber); }
+
+.col-body {
+  font-size: clamp(0.9rem, 1.1vw, 1rem);
+  line-height: 1.85;
+  color: var(--mid);
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.col-body p + p { margin-top: 1.2em; }
+.col-body strong { color: var(--white); font-weight: 500; }
+
+/* ── FULL-WIDTH STATEMENT ── */
+.statement {
+  padding: 16vh 4vw;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.statement-num {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--dim);
+  opacity: 0;
+}
+
+.statement h2 {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(2.5rem, 6vw, 6rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  max-width: 18ch;
+  opacity: 0;
+  transform: translateY(50px);
+}
+.statement h2 em { font-style: italic; color: var(--amber); }
+
+.statement p {
+  font-size: clamp(0.95rem, 1.2vw, 1.1rem);
+  color: var(--mid);
+  max-width: 52ch;
+  line-height: 1.8;
+  opacity: 0;
+}
+
+/* ── TIMELINE ── */
+.timeline {
+  padding: 14vh 4vw;
+}
+
+.timeline-header {
+  margin-bottom: 8vh;
+}
+
+.timeline-header .col-label { opacity: 0; }
+.timeline-header h2 {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(2.2rem, 4.5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  max-width: 20ch;
+  opacity: 0;
+  transform: translateY(40px);
+}
+.timeline-header h2 em { font-style: italic; color: var(--amber); }
+
+.timeline-track {
+  position: relative;
+  padding-left: 3rem;
+}
+
+.timeline-track::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.6rem;
+  bottom: 0;
+  width: 1px;
+  background: var(--border);
+}
+
+.timeline-item {
+  position: relative;
+  padding: 0 0 5rem 3rem;
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -3rem;
+  top: 0.55rem;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.timeline-item.highlight::before {
+  background: var(--amber);
+  border-color: var(--amber);
+  box-shadow: 0 0 20px color-mix(in oklch, var(--amber) 40%, transparent);
+}
+
+.timeline-year {
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--amber-dim);
+  margin-bottom: 0.6rem;
+}
+.timeline-item.highlight .timeline-year { color: var(--amber); }
+
+.timeline-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  font-weight: 400;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.timeline-body {
+  font-size: 0.9rem;
+  color: var(--mid);
+  line-height: 1.75;
+  max-width: 58ch;
+}
+.timeline-body strong { color: var(--white); font-weight: 500; }
+
+.timeline-tag {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid var(--amber);
+  color: var(--amber);
+  border-radius: 2px;
+}
+
+/* ── MECHANISM SECTION ── */
+.mechanism {
+  padding: 14vh 4vw;
+  background: var(--paper);
+}
+
+.mech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin-top: 6vh;
+}
+
+.mech-card {
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--border);
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.mech-num {
+  font-size: 3rem;
+  font-family: 'Source Serif 4', serif;
+  font-weight: 300;
+  color: var(--border);
+  line-height: 1;
+  margin-bottom: 1.5rem;
+}
+
+.mech-card-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.3rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.mech-card-title em { font-style: italic; color: var(--amber); }
+
+.mech-card-body {
+  font-size: 0.88rem;
+  line-height: 1.8;
+  color: var(--mid);
+}
+.mech-card-body strong { color: var(--white); font-weight: 500; }
+
+/* ── DISCOVERY HERO ── */
+.discovery {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  padding: 14vh 4vw;
+  position: relative;
+  overflow: hidden;
+}
+
+.discovery-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 60% 50%, color-mix(in oklch, var(--amber) 8%, transparent) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.discovery-content { max-width: 65ch; }
+
+.discovery-date {
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 2rem;
+  opacity: 0;
+}
+
+.discovery h2 {
+  font-family: 'Source Serif 4', serif;
+  font-size: clamp(2.5rem, 5vw, 5rem);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin-bottom: 2.5rem;
+  opacity: 0;
+  transform: translateY(50px);
+}
+.discovery h2 em { font-style: italic; color: var(--amber); }
+
+.discovery-body {
+  font-size: clamp(0.95rem, 1.2vw, 1.05rem);
+  color: var(--mid);
+  line-height: 1.85;
+  opacity: 0;
+}
+.discovery-body p + p { margin-top: 1.2em; }
+.discovery-body strong { color: var(--white); font-weight: 500; }
+
+.citation {
+  margin-top: 3rem;
+  padding: 1.5rem 2rem;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.8rem;
+  color: var(--dim);
+  line-height: 1.6;
+  opacity: 0;
+}
+.citation em { font-style: italic; color: var(--mid); }
+
+/* ── IMPLICATIONS ── */
+.implications {
+  padding: 14vh 4vw;
+}
+
+.impl-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  margin-top: 6vh;
+}
+
+.impl-item {
+  padding: 3rem;
+  background: var(--paper);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: background 0.3s;
+}
+.impl-item:hover { background: var(--surface); }
+
+.impl-icon {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.impl-title {
+  font-family: 'Source Serif 4', serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  margin-bottom: 0.75rem;
+}
+.impl-title em { font-style: italic; color: var(--amber); }
+
+.impl-body {
+  font-size: 0.88rem;
+  color: var(--mid);
+  line-height: 1.75;
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 4rem 4vw;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .two-col { grid-template-columns: 1fr; gap: 4rem; }
+  .mech-grid { grid-template-columns: 1fr; }
+  .impl-grid { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+  .pull-quote { flex-direction: column; gap: 1.5rem; }
+  .pq-line { width: 3rem; height: 3px; transform: scaleX(0); transform-origin: left; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="cell-canvas"></canvas>
+
+<nav>
+  <span class="nav-logo">Trained Immunity</span>
+  <ul class="nav-links">
+    <li><a href="#discovery">The Discovery</a></li>
+    <li><a href="#mechanism">How It Works</a></li>
+    <li><a href="#implications">Implications</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-eyebrow">A revolution in immunology</div>
+  <h1>Your body has a<br><em>second memory</em><br>you never knew about.</h1>
+  <p class="hero-sub">For over a century, science believed only one part of your immune system could remember a threat. In 2011, everything changed. A discovery so fundamental it rewrote the textbooks — and may rewrite how we treat cancer, infections, and inflammatory disease.</p>
+  <div class="hero-scroll-hint">Scroll to explore</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── PULL QUOTE 1 ── -->
+<section class="pull-quote">
+  <div class="pq-line"></div>
+  <p class="pq-text">"The innate immune system was supposed to be <em>dumb</em>. Fast, blunt, and forgetful. We were wrong."</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── TWO SYSTEMS ── -->
+<section class="two-col" id="discovery">
+  <div>
+    <div class="col-label">The old model</div>
+    <h2 class="col-title">Two armies.<br>One with <em>no memory.</em></h2>
+    <div class="col-body">
+      <p>Your immune system has two branches. The <strong>Adaptive</strong> immune system is the one you've heard of — it learns, remembers, and is why vaccines work. It produces antibodies and trains T cells to recognize specific invaders. This process takes days or weeks, but once done, the memory lasts a lifetime.</p>
+      <p>Then there's the <strong>Innate</strong> immune system — the first responder. It hits immediately, within minutes. It doesn't care what the threat is. It sees "foreign" and attacks. It was powerful, but according to 100 years of immunology, it was also <strong>stateless</strong>. No memory. No learning. Same response every single time.</p>
+      <p>This was taught in every medical school on earth. It was written in every immunology textbook. It was accepted fact.</p>
+      <p>Until it wasn't.</p>
+    </div>
+  </div>
+  <div>
+    <div class="col-label">The immune hierarchy</div>
+    <div style="margin-top: 0.5rem; border: 1px solid var(--border); padding: 2rem; background: var(--paper);">
+      <div style="margin-bottom: 2rem; opacity: 0;" class="immune-card">
+        <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber-dim); margin-bottom: 0.5rem;">Innate Immune System</div>
+        <div style="font-family: 'Source Serif 4', serif; font-size: 1.1rem; margin-bottom: 0.5rem;">The First Responder</div>
+        <div style="font-size: 0.83rem; color: var(--mid); line-height: 1.7;">Responds within <strong style="color:var(--white)">minutes</strong>. Non-specific. Includes macrophages, monocytes, NK cells, neutrophils. Prior to 2011: believed to have <strong style="color:var(--white)">no memory.</strong></div>
+        <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <span style="font-size: 0.65rem; padding: 0.2rem 0.6rem; border: 1px solid var(--border); color: var(--dim); border-radius: 2px;">Fast</span>
+          <span style="font-size: 0.65rem; padding: 0.2rem 0.6rem; border: 1px solid var(--border); color: var(--dim); border-radius: 2px;">Non-specific</span>
+          <span style="font-size: 0.65rem; padding: 0.2rem 0.6rem; border: 1px solid var(--amber); color: var(--amber); border-radius: 2px;">Can be trained ✦ new</span>
+        </div>
+      </div>
+      <div style="height: 1px; background: var(--border); margin-bottom: 2rem;"></div>
+      <div style="opacity: 0;" class="immune-card">
+        <div style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--mid); margin-bottom: 0.5rem;">Adaptive Immune System</div>
+        <div style="font-family: 'Source Serif 4', serif; font-size: 1.1rem; margin-bottom: 0.5rem;">The Memory Keeper</div>
+        <div style="font-size: 0.83rem; color: var(--mid); line-height: 1.7;">Responds in <strong style="color:var(--white)">days to weeks</strong>. Highly specific. B cells, T cells, antibodies. Has immunological memory — the basis of all conventional vaccines.</div>
+        <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <span style="font-size: 0.65rem; padding: 0.2rem 0.6rem; border: 1px solid var(--border); color: var(--dim); border-radius: 2px;">Slow</span>
+          <span style="font-size: 0.65rem; padding: 0.2rem 0.6rem; border: 1px solid var(--border); color: var(--dim); border-radius: 2px;">Specific</span>
+          <span style="font-size: 0.65rem; padding: 0.2rem 0.6rem; border: 1px solid var(--border); color: var(--dim); border-radius: 2px;">Has memory</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── FULL STATEMENT ── -->
+<section class="statement">
+  <div class="statement-num">The paradigm shift</div>
+  <h2>The innate immune system<br>does <em>remember.</em><br>It just needed a name.</h2>
+  <p>That name is <strong>Trained Immunity</strong> — and its discovery in 2011 by Professor Mihai Netea and colleagues at Radboud University may be one of the most consequential findings in modern biology.</p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── TIMELINE ── -->
+<section class="timeline" id="timeline">
+  <div class="timeline-header">
+    <div class="col-label">A century of immunology</div>
+    <h2>How we got here —<br>and why 2011 <em>changed everything.</em></h2>
+  </div>
+
+  <div class="timeline-track">
+
+    <div class="timeline-item">
+      <div class="timeline-year">1880s – 1900s</div>
+      <div class="timeline-title">The two-system model is born</div>
+      <div class="timeline-body">Élie Metchnikoff discovers phagocytosis — innate immune cells engulfing bacteria. Paul Ehrlich describes antibodies. The foundation of the two-system model is laid: one arm is fast and non-specific, the other slow and precise. Both receive the Nobel Prize.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-year">1940s – 1970s</div>
+      <div class="timeline-title">Immunological memory is formalized</div>
+      <div class="timeline-body">The concept of immunological memory becomes central to all of vaccine science. Memory belongs exclusively to T cells and B cells in the adaptive system. Textbooks cement this as biological law: <strong>innate immunity does not adapt; it does not remember.</strong></div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-year">1920s – 2000s</div>
+      <div class="timeline-title">A puzzle hiding in plain sight</div>
+      <div class="timeline-body">Epidemiologists notice something odd. The BCG vaccine — developed to prevent tuberculosis — also seems to protect against unrelated infections in infants. Mortality drops far beyond what TB alone could explain. The effect is real, but nobody can explain it. The innate-has-no-memory dogma leaves scientists without a framework.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-year">2009 – 2010</div>
+      <div class="timeline-title">Netea's team begins to look deeper</div>
+      <div class="timeline-body">Mihai Netea and colleagues at Radboud University Medical Center in Nijmegen, the Netherlands start methodically studying monocytes — frontline innate immune cells — after exposure to beta-glucan, a compound found in fungal cell walls. What they find defies the textbooks.</div>
+    </div>
+
+    <div class="timeline-item highlight">
+      <div class="timeline-year">2011</div>
+      <div class="timeline-title">The paper that changed immunology</div>
+      <div class="timeline-body">Netea's group publishes in <em>Nature Immunology</em>: monocytes exposed to beta-glucan showed dramatically <strong>enhanced responses to completely different pathogens weeks later</strong> — with no involvement from T or B cells whatsoever. The innate immune system had, against all expectation, <strong>learned and remembered.</strong> They named it: <strong>Trained Immunity.</strong></div>
+      <span class="timeline-tag">✦ The Discovery</span>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-year">2012 – 2016</div>
+      <div class="timeline-title">The epigenetic mechanism is revealed</div>
+      <div class="timeline-body">Follow-up research shows the mechanism: exposure to a pathogen or stimulus triggers <strong>epigenetic reprogramming</strong> of innate immune cells. Specific regions of DNA are chemically marked — "opened up" — so the cell can respond faster and more powerfully next time. No new DNA. No antibodies. Just the cell's own software, rewritten.</div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-year">2017 – present</div>
+      <div class="timeline-title">A field explodes</div>
+      <div class="timeline-body">Hundreds of labs worldwide replicate and extend the findings. Trained immunity is confirmed in macrophages, NK cells, neutrophils, and even stem cell precursors in bone marrow. The BCG puzzle is finally explained. Clinical trials begin. The implications for cancer, COVID-19, autoimmune disease, and vaccine design start to come into focus.</div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── DISCOVERY DEEP DIVE ── -->
+<section class="discovery" id="mechanism">
+  <div class="discovery-bg"></div>
+  <div class="discovery-content">
+    <div class="discovery-date">Nature Immunology, 2011 — Mihai G. Netea et al.</div>
+    <h2>The innate immune system<br>had a <em>secret</em><br>all along.</h2>
+    <div class="discovery-body">
+      <p>The key to understanding trained immunity is <strong>epigenetics</strong> — the study of how genes are switched on and off without changing the underlying DNA sequence. Think of it like a dimmer switch on a lamp: the wiring is the same, but the brightness can be adjusted.</p>
+      <p>When an innate immune cell — like a monocyte or macrophage — encounters a threat for the first time, something remarkable happens beyond just fighting it off. The cell undergoes a series of chemical modifications to the proteins that DNA is wrapped around, called <strong>histones</strong>. These modifications physically open up specific regions of the genome, making key immune response genes easier to activate next time.</p>
+      <p>The cell doesn't store a record of <em>what</em> the threat was — not the way a T cell remembers a specific virus. Instead, it stores a <em>readiness state</em>. It becomes broadly primed. Faster. More potent. More alert.</p>
+      <p>This is trained immunity. And it can last for months — even, in some cases, years.</p>
+    </div>
+    <div class="citation">
+      <em>"Monocytes from individuals vaccinated with BCG showed increased production of pro-inflammatory cytokines upon ex vivo stimulation with unrelated pathogens, which was maintained for at least 3 months."</em><br><br>
+      — Kleinnijenhuis et al., <em>Proceedings of the National Academy of Sciences</em>, 2012
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── MECHANISM CARDS ── -->
+<section class="mechanism">
+  <div class="col-label" style="opacity: 0; padding: 0 0 0 0;">The biology</div>
+  <h2 class="col-title" style="max-width: none; padding: 0;">How a cell <em>learns</em> to remember.</h2>
+
+  <div class="mech-grid">
+    <div class="mech-card">
+      <div class="mech-num">01</div>
+      <h3 class="mech-card-title">First <em>encounter</em></h3>
+      <p class="mech-card-body">An innate immune cell meets a pathogen or stimulus — a fungal particle, a bacterial component, a vaccine. It mounts an immediate response, engulfing and destroying the threat. Standard procedure.</p>
+    </div>
+    <div class="mech-card">
+      <div class="mech-num">02</div>
+      <h3 class="mech-card-title"><em>Epigenetic</em> rewriting</h3>
+      <p class="mech-card-body">As the cell resolves the response, <strong>chemical marks are added to its histones</strong> — the proteins DNA is coiled around. Specifically, activating marks at H3K4me3 and H3K27ac positions open up regions near key immune genes, leaving them in a "ready" state. This is not random: these are the same genes that coordinate powerful immune responses.</p>
+    </div>
+    <div class="mech-card">
+      <div class="mech-num">03</div>
+      <h3 class="mech-card-title"><em>Metabolic</em> rewiring</h3>
+      <p class="mech-card-body">Trained cells also shift their energy metabolism. They lean into <strong>aerobic glycolysis</strong> — a faster energy pathway that can fuel rapid activation. This rewiring is controlled by the same mTOR and HIF-1α pathways involved in cancer cell metabolism, hinting at deep biological connections.</p>
+    </div>
+    <div class="mech-card">
+      <div class="mech-num">04</div>
+      <h3 class="mech-card-title">The <em>second hit</em></h3>
+      <p class="mech-card-body">Weeks or months later, the trained cell encounters a threat — <strong>any threat, even a completely different one.</strong> Because its key immune genes are already "open," activation is faster. Cytokine output is amplified. The response is stronger. The pathogen is cleared more efficiently.</p>
+    </div>
+    <div class="mech-card">
+      <div class="mech-num">05</div>
+      <h3 class="mech-card-title"><em>Beta-glucan</em> — the training stimulus</h3>
+      <p class="mech-card-body">Beta-glucan, a polysaccharide found in the cell walls of fungi and yeast, is one of the most potent known inducers of trained immunity. Found naturally in mushrooms, oats, and baker's yeast, it binds Dectin-1 receptors on monocytes and macrophages — triggering the epigenetic cascade. It is safe, non-toxic, and has been consumed by humans for millennia.</p>
+    </div>
+    <div class="mech-card">
+      <div class="mech-num">06</div>
+      <h3 class="mech-card-title">Memory in the <em>bone marrow</em></h3>
+      <p class="mech-card-body">Perhaps the most striking discovery: trained immunity can be <strong>imprinted in hematopoietic stem cells</strong> in the bone marrow — the cells that generate all blood and immune cells. This means the training can propagate to every new innate immune cell produced for months. The body can be broadly primed at the source.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── PULL QUOTE 2 ── -->
+<section class="pull-quote">
+  <div class="pq-line"></div>
+  <p class="pq-text">"We are now realizing that the innate immune system has more plasticity than we ever imagined. <em>The implications are enormous.</em>"<br><br><span style="font-size: 0.75rem; color: var(--dim); font-family: 'Inter', sans-serif; font-style: normal; letter-spacing: 0.04em;">— Prof. Mihai Netea, Radboud University Medical Center</span></p>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── IMPLICATIONS ── -->
+<section class="implications" id="implications">
+  <div class="col-label" style="opacity: 0;" id="impl-label">What comes next</div>
+  <h2 class="col-title" style="max-width: none;" id="impl-title">A discovery with<br><em>no ceiling</em> in sight.</h2>
+
+  <div class="impl-grid">
+    <div class="impl-item">
+      <div class="impl-icon">⬡</div>
+      <h3 class="impl-title">Next-generation <em>vaccines</em></h3>
+      <p class="impl-body">Traditional vaccines target a single pathogen via adaptive immunity. Trained immunity vaccines could broadly prime the innate system — providing wider, faster protection against multiple threats simultaneously. BCG, originally developed for tuberculosis, reduces infant mortality from sepsis and respiratory infections by up to 50% through exactly this mechanism.</p>
+    </div>
+    <div class="impl-item">
+      <div class="impl-icon">◈</div>
+      <h3 class="impl-title"><em>Cancer</em> immunotherapy</h3>
+      <p class="impl-body">Tumor cells suppress the innate immune system to avoid detection. Trained immunity offers a route to re-arm innate cells against tumors. Early trials using beta-glucan as an adjunct to chemotherapy and immunotherapy show enhanced tumor clearance. The immune system's first responders, properly trained, may be potent cancer fighters.</p>
+    </div>
+    <div class="impl-item">
+      <div class="impl-icon">◯</div>
+      <h3 class="impl-title">Infectious disease<br><em>resilience</em></h3>
+      <p class="impl-body">During the COVID-19 pandemic, researchers found that BCG vaccination correlated with lower mortality rates in some populations — a trained immunity effect. Multiple clinical trials were launched. The possibility of broad-spectrum infectious disease protection through innate immune training is now actively pursued.</p>
+    </div>
+    <div class="impl-item">
+      <div class="impl-icon">◎</div>
+      <h3 class="impl-title">Autoimmune and<br><em>inflammatory disease</em></h3>
+      <p class="impl-body">Trained immunity cuts both ways. Overactivation — when innate cells are trained to be hyperreactive — may drive chronic inflammation and autoimmune disease. Conditions like atherosclerosis, type 2 diabetes, and Alzheimer's may involve a form of maladaptive trained immunity. Understanding this opens new therapeutic targets to <em>de-train</em> an overactive innate system.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── CLOSING STATEMENT ── -->
+<section class="statement">
+  <div class="statement-num">The future of immunology</div>
+  <h2>One hundred years of<br>biology, <em>revised.</em></h2>
+  <p>The discovery of trained immunity didn't invalidate what came before — it completed it. The innate immune system is not dumb. It is not stateless. It is a dynamic, adaptive, memory-capable system that we are only beginning to understand. The next generation of medicines, vaccines, and therapies will be built on this foundation.</p>
+</section>
+
+<footer>
+  <span>trained-immunity.com</span>
+  <span>Based on research by Netea et al., Radboud University, 2011</span>
+</footer>
+
+<!-- ── SCRIPTS ── -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+// ── CELL CANVAS ──
+const canvas = document.getElementById('cell-canvas');
+const ctx = canvas.getContext('2d');
+let cells = [];
+const AMBER = { r: 212, g: 152, b: 58 };
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function createCell() {
+  return {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 60 + 20,
+    vx: (Math.random() - 0.5) * 0.15,
+    vy: (Math.random() - 0.5) * 0.15,
+    alpha: Math.random() * 0.12 + 0.03,
+    pulse: Math.random() * Math.PI * 2,
+    pulseSpeed: Math.random() * 0.008 + 0.003,
+    type: Math.floor(Math.random() * 3), // 0=circle, 1=hexagon, 2=ring
+  };
+}
+
+for (let i = 0; i < 22; i++) cells.push(createCell());
+
+function drawHex(x, y, r) {
+  ctx.beginPath();
+  for (let i = 0; i < 6; i++) {
+    const angle = (Math.PI / 3) * i - Math.PI / 6;
+    const px = x + r * Math.cos(angle);
+    const py = y + r * Math.sin(angle);
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+}
+
+function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  cells.forEach(c => {
+    c.pulse += c.pulseSpeed;
+    const pulseFactor = 1 + Math.sin(c.pulse) * 0.08;
+    const r = c.r * pulseFactor;
+    const alpha = c.alpha + Math.sin(c.pulse) * 0.02;
+
+    ctx.strokeStyle = `rgba(${AMBER.r}, ${AMBER.g}, ${AMBER.b}, ${alpha})`;
+    ctx.lineWidth = 0.8;
+    ctx.fillStyle = `rgba(${AMBER.r}, ${AMBER.g}, ${AMBER.b}, ${alpha * 0.08})`;
+
+    if (c.type === 0) {
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
+      ctx.fill(); ctx.stroke();
+      // nucleus
+      ctx.beginPath();
+      ctx.arc(c.x + r * 0.1, c.y - r * 0.1, r * 0.35, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${AMBER.r}, ${AMBER.g}, ${AMBER.b}, ${alpha * 0.15})`;
+      ctx.fill();
+    } else if (c.type === 1) {
+      drawHex(c.x, c.y, r);
+      ctx.fill(); ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, r * 0.6, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    c.x += c.vx; c.y += c.vy;
+    if (c.x < -100) c.x = canvas.width + 100;
+    if (c.x > canvas.width + 100) c.x = -100;
+    if (c.y < -100) c.y = canvas.height + 100;
+    if (c.y > canvas.height + 100) c.y = -100;
+  });
+  requestAnimationFrame(animate);
+}
+animate();
+
+// ── HERO ANIMATIONS ──
+const heroTl = gsap.timeline({ delay: 0.3 });
+heroTl
+  .to('.hero-eyebrow', { opacity: 1, duration: 0.8, ease: 'power2.out' })
+  .to('.hero h1', { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out' }, '-=0.4')
+  .to('.hero-sub', { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, '-=0.7')
+  .to('.hero-scroll-hint', { opacity: 1, duration: 0.8 }, '-=0.3');
+
+// ── SCROLL ANIMATIONS ──
+
+// Pull quotes
+gsap.utils.toArray('.pq-line').forEach(el => {
+  gsap.to(el, {
+    scaleY: 1, scaleX: 1, duration: 0.8, ease: 'power3.out',
+    scrollTrigger: { trigger: el.parentElement, start: 'top 75%' }
+  });
+});
+gsap.utils.toArray('.pq-text').forEach(el => {
+  gsap.to(el, {
+    opacity: 1, x: 0, duration: 1, ease: 'power2.out',
+    scrollTrigger: { trigger: el.parentElement, start: 'top 70%' }
+  });
+});
+
+// Generic fade-up
+function revealOnScroll(selector, stagger = 0) {
+  gsap.utils.toArray(selector).forEach((el, i) => {
+    gsap.to(el, {
+      opacity: 1, y: 0, x: 0,
+      duration: 0.9, ease: 'power2.out',
+      delay: stagger ? i * stagger : 0,
+      scrollTrigger: { trigger: el, start: 'top 82%' }
+    });
+  });
+}
+
+revealOnScroll('.col-label');
+revealOnScroll('.col-title');
+revealOnScroll('.col-body');
+revealOnScroll('.immune-card', 0.15);
+revealOnScroll('.statement-num');
+revealOnScroll('.statement h2');
+revealOnScroll('.statement p');
+revealOnScroll('.timeline-header h2');
+revealOnScroll('.timeline-header .col-label');
+
+// Timeline items stagger
+gsap.utils.toArray('.timeline-item').forEach((el, i) => {
+  gsap.to(el, {
+    opacity: 1, x: 0, duration: 0.7, ease: 'power2.out',
+    scrollTrigger: { trigger: el, start: 'top 85%' }
+  });
+});
+
+// Discovery section
+revealOnScroll('.discovery-date');
+revealOnScroll('.discovery h2');
+revealOnScroll('.discovery-body');
+revealOnScroll('.citation');
+
+// Mechanism cards
+gsap.utils.toArray('.mech-card').forEach((el, i) => {
+  gsap.to(el, {
+    opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+    delay: (i % 3) * 0.1,
+    scrollTrigger: { trigger: el, start: 'top 85%' }
+  });
+});
+
+// Mechanism section labels
+revealOnScroll('.mechanism .col-label');
+revealOnScroll('.mechanism .col-title');
+
+// Implications
+gsap.utils.toArray('.impl-item').forEach((el, i) => {
+  gsap.to(el, {
+    opacity: 1, y: 0, duration: 0.7, ease: 'power2.out',
+    delay: (i % 2) * 0.1,
+    scrollTrigger: { trigger: el, start: 'top 85%' }
+  });
+});
+revealOnScroll('#impl-label');
+revealOnScroll('#impl-title');
+</script>
+
+</body>
+</html>
